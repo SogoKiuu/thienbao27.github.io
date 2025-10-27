@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
+    <title>Loading...</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔫</text></svg>">
     <style>
         * {
             margin: 0;
@@ -15,14 +16,6 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             overflow: hidden;
             height: 100vh;
-        }
-
-        .forest-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
             background: linear-gradient(180deg, 
                 rgba(26, 77, 46, 0.4) 0%,
                 rgba(45, 95, 63, 0.3) 50%,
@@ -30,16 +23,13 @@
                 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%23b8e6a8;stop-opacity:1" /><stop offset="100%" style="stop-color:%2388cc77;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23sky)" width="1200" height="800"/></svg>');
             background-size: cover;
             background-position: center;
-            z-index: -3;
+            background-attachment: fixed;
         }
 
         .trees-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
+            inset: 0;
+            z-index: 1;
             overflow: hidden;
         }
 
@@ -54,12 +44,6 @@
                 rgba(40, 60, 45, 0.9) 100%);
             border-radius: 50% 50% 0 0 / 20% 20% 0 0;
             animation: sway 4s ease-in-out infinite;
-        }
-
-        @keyframes sway {
-            0%, 100% { transform: rotate(0deg) translateX(0); }
-            25% { transform: rotate(0.5deg) translateX(2px); }
-            75% { transform: rotate(-0.5deg) translateX(-2px); }
         }
 
         .tree::before {
@@ -77,6 +61,12 @@
             animation: leaves-move 5s ease-in-out infinite;
         }
 
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            25% { transform: rotate(0.5deg) translateX(2px); }
+            75% { transform: rotate(-0.5deg) translateX(-2px); }
+        }
+
         @keyframes leaves-move {
             0%, 100% { transform: scale(1) translateY(0); }
             50% { transform: scale(1.05) translateY(-5px); }
@@ -84,31 +74,25 @@
 
         .light-rays {
             position: fixed;
-            top: -50%;
-            left: -10%;
-            width: 120%;
-            height: 150%;
+            inset: -50% -10% 0;
             background: 
                 radial-gradient(ellipse at 20% 10%, rgba(255, 255, 200, 0.15) 0%, transparent 40%),
                 radial-gradient(ellipse at 80% 20%, rgba(255, 255, 200, 0.12) 0%, transparent 35%),
                 radial-gradient(ellipse at 50% 30%, rgba(255, 255, 200, 0.1) 0%, transparent 30%);
             animation: light-shift 20s ease-in-out infinite;
-            z-index: -1;
+            z-index: 2;
             pointer-events: none;
         }
 
         @keyframes light-shift {
-            0%, 100% { transform: translateX(0) translateY(0); opacity: 0.6; }
-            50% { transform: translateX(-20px) translateY(10px); opacity: 0.8; }
+            0%, 100% { transform: translate(0, 0); opacity: 0.6; }
+            50% { transform: translate(-20px, 10px); opacity: 0.8; }
         }
 
         .particles {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+            inset: 0;
+            z-index: 3;
             pointer-events: none;
         }
 
@@ -127,12 +111,8 @@
                 transform: translateY(100vh) translateX(0) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
             100% {
                 transform: translateY(-100px) translateX(50px) rotate(360deg);
                 opacity: 0;
@@ -141,15 +121,12 @@
 
         .entrance-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0, 0, 0, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
             cursor: pointer;
             transition: opacity 0.5s;
         }
@@ -164,7 +141,6 @@
             font-size: 2rem;
             font-weight: 300;
             letter-spacing: 2px;
-            text-align: center;
             animation: pulse 2s ease-in-out infinite;
         }
 
@@ -198,6 +174,7 @@
             border: 4px solid rgba(255, 255, 255, 0.9);
             margin-bottom: 20px;
             object-fit: cover;
+            object-position: 70% 35%;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             animation: float-avatar 3s ease-in-out infinite;
             background: white;
@@ -213,6 +190,21 @@
             font-weight: 600;
             margin-bottom: 10px;
             text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            animation: fadeInTitle 1.5s ease-out 0.3s forwards;
+        }
+
+        @keyframes fadeInTitle {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
         }
 
         .profile-location {
@@ -231,6 +223,8 @@
             gap: 15px;
             margin-bottom: 30px;
             font-size: 1.1rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .stats-item {
@@ -242,6 +236,24 @@
             border-radius: 20px;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #43b581;
+            animation: status-pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.offline {
+            background: #747f8d;
+            animation: none;
+        }
+
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .social-links {
@@ -270,55 +282,29 @@
         }
 
         .view-count {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 1rem;
-            opacity: 0.9;
-            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
-        }
-
-        .music-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
+            font-size: 1.1rem;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            z-index: 100;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 20;
         }
 
-        .music-toggle:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: scale(1.1);
-        }
-
-        .music-toggle.playing {
-            animation: music-pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes music-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .view-number {
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <div class="forest-background"></div>
-    
     <div class="trees-layer" id="trees"></div>
-    
     <div class="light-rays"></div>
-    
     <div class="particles" id="particles"></div>
     
     <div class="entrance-overlay" id="entrance">
@@ -326,9 +312,9 @@
     </div>
 
     <div class="profile-container" id="profile">
-        <img src="https://via.placeholder.com/150/4a7c59/ffffff?text=Avatar" alt="Profile" class="profile-avatar">
+        <img src="c:\Users\NGUYEN DAC THIEN BAO\Downloads\z7160262044874_c650a21506f8b09baec91a5fb917ffa4.jpg" alt="Profile" class="profile-avatar">
         
-        <h1 class="profile-name">Thienbao27</h1>
+        <h1 class="profile-name">thienbao27</h1>
         
         <div class="profile-location">
             <span>📍</span>
@@ -337,9 +323,13 @@
 
         <div class="stats">
             <div class="stats-item">
-                <img src="https://via.placeholder.com/40/ffffff/4a7c59?text=👤" alt="User" style="width: 30px; height: 30px; border-radius: 50%;">
-                <span>27.01z</span>
-                <span style="opacity: 0.7; font-size: 0.9rem;">last seen 27 minutes ago</span>
+                <span>💬</span>
+                <span class="status-dot" id="statusDot"></span>
+                <span id="discordStatus">Online</span>
+            </div>
+            <div class="stats-item">
+                <span>⏰</span>
+                <span id="lastSeen">Active now</span>
             </div>
         </div>
 
@@ -352,12 +342,8 @@
 
         <div class="view-count">
             <span>👁️</span>
-            <span>160</span>
+            <span class="view-number" id="viewCount">0</span>
         </div>
-    </div>
-
-    <div class="music-toggle" id="musicToggle">
-        <span style="font-size: 24px;">🔊</span>
     </div>
 
     <audio id="bgMusic" loop>
@@ -365,86 +351,143 @@
     </audio>
 
     <script>
-        // Create forest trees
-        const treesLayer = document.getElementById('trees');
-        const treePositions = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95];
-        
-        treePositions.forEach((pos, index) => {
-            const tree = document.createElement('div');
-            tree.className = 'tree';
-            tree.style.left = pos + '%';
-            tree.style.width = (60 + Math.random() * 40) + 'px';
-            tree.style.animationDelay = (index * 0.3) + 's';
-            tree.style.opacity = 0.6 + (Math.random() * 0.4);
-            treesLayer.appendChild(tree);
-        });
+        const CONFIG = {
+            username: 'thienbao27',
+            treeCount: 10,
+            particleCount: 40,
+            onlineHours: { start: 8, end: 23 },
+            socialLinks: {
+                instagram: 'https://www.instagram.com/tbaoo.__/',
+                tiktok: 'https://www.tiktok.com/@teddy.9189',
+                website: 'https://www.facebook.com/thien.bao.50916/',
+                discord: 'https://discord.com/users/722018171824898100'
+            }
+        };
 
-        // Create floating particles (fireflies/dust)
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 40; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particlesContainer.appendChild(particle);
+        // Infinite title slide effect (forward and backward loop)
+        let titleIndex = 0;
+        const titles = ['thienbao27', 't', 'th', 'thi', 'thie', 'thien', 'thienb', 'thienba', 'thienbao', 'thienbao2', 'thienbao27', 'thienbao2', 'thienbao', 'thienba', 'thienb', 'thien', 'thie', 'thi', 'th', 't'];
+        
+        function animateTitle() {
+            document.title = titles[titleIndex];
+            titleIndex = (titleIndex + 1) % titles.length;
+            setTimeout(animateTitle, 150);
         }
 
-        // Entrance effect
+        // Initialize trees
+        const treesLayer = document.getElementById('trees');
+        const fragment = document.createDocumentFragment();
+        
+        for (let i = 0; i < CONFIG.treeCount; i++) {
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.cssText = `
+                left: ${(i * 100 / CONFIG.treeCount) + 5}%;
+                width: ${60 + Math.random() * 40}px;
+                animation-delay: ${i * 0.3}s;
+                opacity: ${0.6 + Math.random() * 0.4};
+            `;
+            fragment.appendChild(tree);
+        }
+        treesLayer.appendChild(fragment);
+
+        // Initialize particles
+        const particlesContainer = document.getElementById('particles');
+        const particleFragment = document.createDocumentFragment();
+        
+        for (let i = 0; i < CONFIG.particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.cssText = `
+                left: ${Math.random() * 100}%;
+                animation-duration: ${Math.random() * 15 + 10}s;
+                animation-delay: ${Math.random() * 5}s;
+            `;
+            particleFragment.appendChild(particle);
+        }
+        particlesContainer.appendChild(particleFragment);
+
+        // View counter
+        function updateViewCount() {
+            const storageKey = 'profile_views';
+            let views = parseInt(localStorage.getItem(storageKey) || '160');
+            
+            if (!sessionStorage.getItem('visited')) {
+                views++;
+                localStorage.setItem(storageKey, views);
+                sessionStorage.setItem('visited', 'true');
+            }
+            
+            const viewElement = document.getElementById('viewCount');
+            const duration = 1000;
+            const steps = 50;
+            const increment = views / steps;
+            let current = 0;
+            let step = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                step++;
+                if (step >= steps) {
+                    current = views;
+                    clearInterval(timer);
+                }
+                viewElement.textContent = Math.floor(current);
+            }, duration / steps);
+        }
+
+        // Discord status
+        function updateDiscordStatus() {
+            const hours = new Date().getHours();
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('discordStatus');
+            const lastSeen = document.getElementById('lastSeen');
+            
+            const isOnline = hours >= CONFIG.onlineHours.start && hours < CONFIG.onlineHours.end;
+            
+            statusDot.classList.toggle('offline', !isOnline);
+            statusText.textContent = isOnline ? 'Online' : 'Offline';
+            
+            if (isOnline) {
+                lastSeen.textContent = 'Active now';
+            } else {
+                const hoursUntilOnline = hours < CONFIG.onlineHours.start 
+                    ? CONFIG.onlineHours.start - hours 
+                    : 24 - hours + CONFIG.onlineHours.start;
+                lastSeen.textContent = `Last seen ${hoursUntilOnline}h ago`;
+            }
+        }
+
+        // Entrance handler
         const entrance = document.getElementById('entrance');
         const profile = document.getElementById('profile');
         const music = document.getElementById('bgMusic');
-        const musicToggle = document.getElementById('musicToggle');
-        let musicPlaying = false;
 
         entrance.addEventListener('click', () => {
             entrance.classList.add('hidden');
             profile.classList.add('visible');
-            music.play();
-            musicPlaying = true;
-            musicToggle.classList.add('playing');
+            music.play().catch(() => {});
+            
+            animateTitle();
+            setTimeout(updateViewCount, 800);
+            updateDiscordStatus();
         });
 
-        // Music toggle
-        musicToggle.addEventListener('click', () => {
-            if (musicPlaying) {
-                music.pause();
-                musicToggle.innerHTML = '<span style="font-size: 24px;">🔇</span>';
-                musicToggle.classList.remove('playing');
-            } else {
-                music.play();
-                musicToggle.innerHTML = '<span style="font-size: 24px;">🔊</span>';
-                musicToggle.classList.add('playing');
-            }
-            musicPlaying = !musicPlaying;
-        });
-
-        // Social icons interaction with links
-        const socialLinks = {
-            instagram: 'https://www.instagram.com/tbaoo.__/',  // Đổi your-username
-            tiktok: 'https://www.tiktok.com/@your-username',       // Đổi your-username
-            website: 'https://your-website.com',                   // Đổi link website
-            discord: 'https://discord.gg/your-invite'              // Đổi invite code
-        };
-
+        // Social links handler
         document.querySelectorAll('.social-icon').forEach(icon => {
             icon.addEventListener('click', () => {
-                const linkType = icon.getAttribute('data-link');
-                const url = socialLinks[linkType];
+                const linkType = icon.dataset.link;
+                const url = CONFIG.socialLinks[linkType];
                 
-                // Animation effect
                 icon.style.transform = 'scale(0.9)';
-                setTimeout(() => {
-                    icon.style.transform = 'scale(1)';
-                }, 100);
+                setTimeout(() => icon.style.transform = '', 100);
                 
-                // Open link in new tab
-                if (url) {
-                    window.open(url, '_blank');
-                }
+                if (url) window.open(url, '_blank');
             });
         });
+
+        // Update status every minute
+        setInterval(updateDiscordStatus, 60000);
     </script>
 </body>
-
 </html>
