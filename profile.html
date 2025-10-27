@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .forest-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(26, 77, 46, 0.4) 0%,
+                rgba(45, 95, 63, 0.3) 50%,
+                rgba(26, 77, 46, 0.5) 100%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%23b8e6a8;stop-opacity:1" /><stop offset="100%" style="stop-color:%2388cc77;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23sky)" width="1200" height="800"/></svg>');
+            background-size: cover;
+            background-position: center;
+            z-index: -3;
+        }
+
+        .trees-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .tree {
+            position: absolute;
+            bottom: 0;
+            width: 80px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(20, 40, 25, 0.6) 0%,
+                rgba(30, 50, 35, 0.8) 40%,
+                rgba(40, 60, 45, 0.9) 100%);
+            border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+            animation: sway 4s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg) translateX(0); }
+            25% { transform: rotate(0.5deg) translateX(2px); }
+            75% { transform: rotate(-0.5deg) translateX(-2px); }
+        }
+
+        .tree::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: -40%;
+            width: 180%;
+            height: 60%;
+            background: radial-gradient(ellipse at center, 
+                rgba(90, 150, 80, 0.6) 0%,
+                rgba(70, 120, 60, 0.4) 50%,
+                transparent 70%);
+            border-radius: 50%;
+            animation: leaves-move 5s ease-in-out infinite;
+        }
+
+        @keyframes leaves-move {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(-5px); }
+        }
+
+        .light-rays {
+            position: fixed;
+            top: -50%;
+            left: -10%;
+            width: 120%;
+            height: 150%;
+            background: 
+                radial-gradient(ellipse at 20% 10%, rgba(255, 255, 200, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 20%, rgba(255, 255, 200, 0.12) 0%, transparent 35%),
+                radial-gradient(ellipse at 50% 30%, rgba(255, 255, 200, 0.1) 0%, transparent 30%);
+            animation: light-shift 20s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes light-shift {
+            0%, 100% { transform: translateX(0) translateY(0); opacity: 0.6; }
+            50% { transform: translateX(-20px) translateY(10px); opacity: 0.8; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(200, 255, 180, 0.6);
+            border-radius: 50%;
+            animation: float linear infinite;
+            box-shadow: 0 0 4px rgba(200, 255, 180, 0.8);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .entrance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 0.5s;
+        }
+
+        .entrance-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .entrance-text {
+            color: white;
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-align: center;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.8s ease-in;
+            position: relative;
+            z-index: 10;
+        }
+
+        .profile-container.visible {
+            opacity: 1;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            object-fit: cover;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            animation: float-avatar 3s ease-in-out infinite;
+            background: white;
+        }
+
+        @keyframes float-avatar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .profile-name {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.7);
+        }
+
+        .profile-location {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .view-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            opacity: 0.9;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        .music-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            z-index: 100;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        .music-toggle.playing {
+            animation: music-pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes music-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="forest-background"></div>
+    
+    <div class="trees-layer" id="trees"></div>
+    
+    <div class="light-rays"></div>
+    
+    <div class="particles" id="particles"></div>
+    
+    <div class="entrance-overlay" id="entrance">
+        <div class="entrance-text">click to enter...</div>
+    </div>
+
+    <div class="profile-container" id="profile">
+        <img src="https://via.placeholder.com/150/4a7c59/ffffff?text=Avatar" alt="Profile" class="profile-avatar">
+        
+        <h1 class="profile-name">Thienbao27</h1>
+        
+        <div class="profile-location">
+            <span>📍</span>
+            <span>VietNam</span>
+        </div>
+
+        <div class="stats">
+            <div class="stats-item">
+                <img src="https://via.placeholder.com/40/ffffff/4a7c59?text=👤" alt="User" style="width: 30px; height: 30px; border-radius: 50%;">
+                <span>27.01z</span>
+                <span style="opacity: 0.7; font-size: 0.9rem;">last seen 27 minutes ago</span>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <div class="social-icon" data-link="instagram" title="Instagram">📱</div>
+            <div class="social-icon" data-link="tiktok" title="TikTok">🎵</div>
+            <div class="social-icon" data-link="website" title="Website">🔗</div>
+            <div class="social-icon" data-link="discord" title="Discord">💬</div>
+        </div>
+
+        <div class="view-count">
+            <span>👁️</span>
+            <span>160</span>
+        </div>
+    </div>
+
+    <div class="music-toggle" id="musicToggle">
+        <span style="font-size: 24px;">🔊</span>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Create forest trees
+        const treesLayer = document.getElementById('trees');
+        const treePositions = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95];
+        
+        treePositions.forEach((pos, index) => {
+            const tree = document.createElement('div');
+            tree.className = 'tree';
+            tree.style.left = pos + '%';
+            tree.style.width = (60 + Math.random() * 40) + 'px';
+            tree.style.animationDelay = (index * 0.3) + 's';
+            tree.style.opacity = 0.6 + (Math.random() * 0.4);
+            treesLayer.appendChild(tree);
+        });
+
+        // Create floating particles (fireflies/dust)
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 40; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Entrance effect
+        const entrance = document.getElementById('entrance');
+        const profile = document.getElementById('profile');
+        const music = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let musicPlaying = false;
+
+        entrance.addEventListener('click', () => {
+            entrance.classList.add('hidden');
+            profile.classList.add('visible');
+            music.play();
+            musicPlaying = true;
+            musicToggle.classList.add('playing');
+        });
+
+        // Music toggle
+        musicToggle.addEventListener('click', () => {
+            if (musicPlaying) {
+                music.pause();
+                musicToggle.innerHTML = '<span style="font-size: 24px;">🔇</span>';
+                musicToggle.classList.remove('playing');
+            } else {
+                music.play();
+                musicToggle.innerHTML = '<span style="font-size: 24px;">🔊</span>';
+                musicToggle.classList.add('playing');
+            }
+            musicPlaying = !musicPlaying;
+        });
+
+        // Social icons interaction with links
+        const socialLinks = {
+            instagram: 'https://www.instagram.com/your-username',  // Đổi your-username
+            tiktok: 'https://www.tiktok.com/@your-username',       // Đổi your-username
+            website: 'https://your-website.com',                   // Đổi link website
+            discord: 'https://discord.gg/your-invite'              // Đổi invite code
+        };
+
+        document.querySelectorAll('.social-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const linkType = icon.getAttribute('data-link');
+                const url = socialLinks[linkType];
+                
+                // Animation effect
+                icon.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    icon.style.transform = 'scale(1)';
+                }, 100);
+                
+                // Open link in new tab
+                if (url) {
+                    window.open(url, '_blank');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
